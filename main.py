@@ -25,9 +25,10 @@ if __name__ == "__main__":
     BoW_vector, vectorizer = utils.vectorize(preprocessed)
     BoW_vector_swl, vectorizer = utils.vectorize(preprocessed_swl)
     # N-gram Vectorizer
-    N_gram_vector_l, vectorizer = utils.vectorize(preprocessed_l, "count", (1,2))
-    N_gram_vector, vectorizer = utils.vectorize(preprocessed, "count", (1,2))
-    N_gram_vector_swl, vectorizer = utils.vectorize(preprocessed_swl, "count", (1,2))
+    ngram_range = (2,2)
+    N_gram_vector_l, vectorizer = utils.vectorize(preprocessed_l, "count", ngram_range)
+    N_gram_vector, vectorizer = utils.vectorize(preprocessed, "count", ngram_range)
+    N_gram_vector_swl, vectorizer = utils.vectorize(preprocessed_swl, "count", ngram_range)
     # TF-IDF Vectorizer
     TF_IDF_vector_l, vectorizer = utils.vectorize(preprocessed_l, "tfidf")
     TF_IDF_vector, vectorizer = utils.vectorize(preprocessed, "tfidf")
@@ -46,15 +47,15 @@ if __name__ == "__main__":
     _ , accuracy_TF_IDF = utils.train_naive_bayes(TF_IDF_vector, labels)
     _ , accuracy_TF_IDF_swl = utils.train_naive_bayes(TF_IDF_vector_swl, labels)
 
-    print("Accuracy of BoW       L: ", accuracy_BoW_l)
-    print("Accuracy of BoW        : ", accuracy_BoW)
-    print("Accuracy of BoW     SWL: ", accuracy_BoW_swl)
+    print("Accuracy of BoW       L:", accuracy_BoW_l)
+    print("Accuracy of BoW        :", accuracy_BoW)
+    print("Accuracy of BoW     SWL:", accuracy_BoW_swl)
 
-    print("Accuracy of N-gram    L: ", accuracy_N_gram_l)
-    print("Accuracy of N-gram     : ", accuracy_N_gram)
-    print("Accuracy of N-gram  SWL: ", accuracy_N_gram_swl)
+    print("Accuracy of N-gram    L:", accuracy_N_gram_l)
+    print("Accuracy of N-gram     :", accuracy_N_gram)
+    print("Accuracy of N-gram  SWL:", accuracy_N_gram_swl)
 
-    print("Accuracy of TF-IDF    L: ", accuracy_TF_IDF_l)
-    print("Accuracy of TF-IDF     : ", accuracy_TF_IDF)
-    print("Accuracy of TF-IDF  SWL: ", accuracy_TF_IDF_swl)
+    print("Accuracy of TF-IDF    L:", accuracy_TF_IDF_l)
+    print("Accuracy of TF-IDF     :", accuracy_TF_IDF)
+    print("Accuracy of TF-IDF  SWL:", accuracy_TF_IDF_swl)
     
