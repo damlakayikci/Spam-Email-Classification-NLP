@@ -6,7 +6,9 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
-
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score
 
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -30,8 +32,8 @@ def preprocess(text, Tokenize = True, StopWords = True, Lemmatize = True):
     if Lemmatize:
         tokens = [lemmatizer.lemmatize(word) for word in tokens]              # Lemmatize text
     if not Tokenize:
-        preprocessed_text = ' '.join(tokens)
-    return preprocessed_text
+        tokens = ' '.join(tokens)
+    return tokens
 
 
 def vectorize(data, method = "count", ngram_range = (1,1)):
@@ -44,3 +46,13 @@ def vectorize(data, method = "count", ngram_range = (1,1)):
         return
     X = vectorizer.fit_transform(data) 
     return X.toarray(), vectorizer
+
+def train_naive_bayes(texts_vectors, labels):
+    text_train, text_test, label_train, label_test = train_test_split(texts_vectors, labels, test_size = 0.2, random_state = 42)
+    model = MultinomialNB()
+    model.fit(text_train, label_train)
+    predicted_labels = model.predict(text_test)
+    accuracy = accuracy_score(label_test, predicted_labels)
+    return model, accuracy
+
+
