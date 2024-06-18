@@ -1,9 +1,20 @@
 import utils
+import FFNN
+import sys
+import pickle
+import pdb 
 
 file  = "Oppositional_thinking_analysis_dataset.json"
 
 if __name__ == "__main__":
 
+    # if len(sys.argv) < 2:
+    #     print("Please provide the model name as an argument.")
+    #     sys.exit(0)
+
+    operation = True # sys.argv[1]
+
+    # Read data
     data = utils.read_data(file)
 
     # Get text data and labels
@@ -34,28 +45,57 @@ if __name__ == "__main__":
     TF_IDF_vector, vectorizer = utils.vectorize(preprocessed, "tfidf")
     TF_IDF_vector_swl, vectorizer = utils.vectorize(preprocessed_swl, "tfidf")
 
-    # Train Naive Bayes model
-    _ , accuracy_BoW_l = utils.train_naive_bayes(BoW_vector_l, labels)
-    _ , accuracy_BoW = utils.train_naive_bayes(BoW_vector, labels)
-    _ , accuracy_BoW_swl = utils.train_naive_bayes(BoW_vector_swl, labels)
+    if operation == "nb":
+        # Train Naive Bayes model
+        _ , accuracy_BoW_l = utils.train_naive_bayes(BoW_vector_l, labels)
+        _ , accuracy_BoW = utils.train_naive_bayes(BoW_vector, labels)
+        _ , accuracy_BoW_swl = utils.train_naive_bayes(BoW_vector_swl, labels)
 
-    _ , accuracy_N_gram_l = utils.train_naive_bayes(N_gram_vector_l, labels)
-    _ , accuracy_N_gram = utils.train_naive_bayes(N_gram_vector, labels)
-    _ , accuracy_N_gram_swl = utils.train_naive_bayes(N_gram_vector_swl, labels)
+        _ , accuracy_N_gram_l = utils.train_naive_bayes(N_gram_vector_l, labels)
+        _ , accuracy_N_gram = utils.train_naive_bayes(N_gram_vector, labels)
+        _ , accuracy_N_gram_swl = utils.train_naive_bayes(N_gram_vector_swl, labels)
 
-    _ , accuracy_TF_IDF_l = utils.train_naive_bayes(TF_IDF_vector_l, labels)
-    _ , accuracy_TF_IDF = utils.train_naive_bayes(TF_IDF_vector, labels)
-    _ , accuracy_TF_IDF_swl = utils.train_naive_bayes(TF_IDF_vector_swl, labels)
+        _ , accuracy_TF_IDF_l = utils.train_naive_bayes(TF_IDF_vector_l, labels)
+        _ , accuracy_TF_IDF = utils.train_naive_bayes(TF_IDF_vector, labels)
+        _ , accuracy_TF_IDF_swl = utils.train_naive_bayes(TF_IDF_vector_swl, labels)
 
-    print("Accuracy of BoW       L:", accuracy_BoW_l)
-    print("Accuracy of BoW        :", accuracy_BoW)
-    print("Accuracy of BoW     SWL:", accuracy_BoW_swl)
+        print("Accuracy of BoW       L:", accuracy_BoW_l)
+        print("Accuracy of BoW        :", accuracy_BoW)
+        print("Accuracy of BoW     SWL:", accuracy_BoW_swl)
 
-    print("Accuracy of N-gram    L:", accuracy_N_gram_l)
-    print("Accuracy of N-gram     :", accuracy_N_gram)
-    print("Accuracy of N-gram  SWL:", accuracy_N_gram_swl)
+        print("Accuracy of N-gram    L:", accuracy_N_gram_l)
+        print("Accuracy of N-gram     :", accuracy_N_gram)
+        print("Accuracy of N-gram  SWL:", accuracy_N_gram_swl)
 
-    print("Accuracy of TF-IDF    L:", accuracy_TF_IDF_l)
-    print("Accuracy of TF-IDF     :", accuracy_TF_IDF)
-    print("Accuracy of TF-IDF  SWL:", accuracy_TF_IDF_swl)
+        print("Accuracy of TF-IDF    L:", accuracy_TF_IDF_l)
+        print("Accuracy of TF-IDF     :", accuracy_TF_IDF)
+        print("Accuracy of TF-IDF  SWL:", accuracy_TF_IDF_swl)
+        sys.exit(0)
+    if operation :#== "ffnn":
+        # Split data into training and testing
+        x_train, x_test, y_train, y_test = utils.split_data(BoW_vector, labels)
+
+        # Train Feed Forward Neural Network
+        # if model.pkl exists, load it
+        try:
+            with open('model.pkl', 'rb') as file:
+                ffnn = pickle.load(file)
+        except:
+            ffnn = FFNN.FFNN(x_train.shape[1], 10, 1)
+            ffnn.train(x_train, y_train, 0.1, 10)
+            # Save model
+            with open('model.pkl', 'wb') as file:
+                pickle.dump(ffnn, file)
+        
+        # Predict
+        err = ffnn.predict(x_test, y_test)
+        print(err)
+
+
+    if operation == "stats":
+        # number of unique words
+
+        pass
+
+
     

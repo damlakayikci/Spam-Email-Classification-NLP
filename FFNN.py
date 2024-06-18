@@ -7,6 +7,12 @@ def sigmoid_derivative(x):
     sig = sigmoid(x)
     return sig * (1 - sig)
 
+def reLU(x):
+    return np.maximum(0, x)
+
+def reLU_derivative(x):
+    return 1 if x > 0 else 0
+
 def sse(y_true, y_pred):
     return np.sum((y_true - y_pred)**2)*0.5
 
@@ -32,7 +38,6 @@ class FFNN:
                 h1 = sigmoid(np.dot(inp, self.W1) + self.B1)            # Hidden layer
                 h1 = h1.flatten()
                 y = sigmoid(np.dot(h1, self.W2) + self.B2)              # Output layer
-                y = y.flatten()
 
                 # Error
                 error += sse(true_out, y)
@@ -67,6 +72,14 @@ class FFNN:
 
                 error /= inp_train.shape[0]
                 print(f"Epoch: {epoch}, Error: {error}")
+        
+    def predict(self, x_test, y_test):
+        h1 = sigmoid(np.dot(x_test, self.W1) + self.B1)            # Hidden layer
+        y = sigmoid(np.dot(h1, self.W2) + self.B2)                 # Output layer
+        error = 0
+        for i in range(x_test.shape[0]):
+            error += sse(y_test[i], y[i])
+        return error/x_test.shape[0]
 
 
         

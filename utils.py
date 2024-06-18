@@ -9,6 +9,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score
+import torch.nn as nn
 
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -18,6 +19,10 @@ def read_data(file):
     file = open(file)
     data = json.load(file)
     return data
+
+def split_data(data, labels, test_size = 0.2, random_state = 13):
+    data_train, data_test, label_train, label_test = train_test_split(data, labels, test_size = test_size, random_state = random_state)
+    return data_train, data_test, label_train, label_test
 
 def preprocess(text, Tokenize = True, StopWords = True, Lemmatize = True):
     stop_words = set(stopwords.words('english'))   
@@ -35,7 +40,6 @@ def preprocess(text, Tokenize = True, StopWords = True, Lemmatize = True):
         tokens = ' '.join(tokens)
     return tokens
 
-
 def vectorize(data, method = "count", ngram_range = (1,1)):
     if method == "count":                                           # Count Vectorizer
         vectorizer = CountVectorizer(ngram_range = ngram_range)
@@ -48,11 +52,10 @@ def vectorize(data, method = "count", ngram_range = (1,1)):
     return X.toarray(), vectorizer
 
 def train_naive_bayes(texts_vectors, labels):
-    text_train, text_test, label_train, label_test = train_test_split(texts_vectors, labels, test_size = 0.2, random_state = 42)
+    text_train, text_test, label_train, label_test = split_data(texts_vectors, labels)
     model = MultinomialNB()
     model.fit(text_train, label_train)
     predicted_labels = model.predict(text_test)
     accuracy = accuracy_score(label_test, predicted_labels)
     return model, accuracy
-
 
