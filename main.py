@@ -79,37 +79,37 @@ if __name__ == "__main__":
         # BoW vector
         # if model.pkl exists, load it
         try:
-            with open('model_bow.pkl', 'rb') as file:
+            with open('models/model_bow.pkl', 'rb') as file:
                 ffnn_bow = pickle.load(file)
         except:
             ffnn_bow = FFNN.FFNN(x_train.shape[1], 10, 1)
             ffnn_bow.train(x_train, y_train, 0.1, 10)
             # Save model
-            with open('model_bow.pkl', 'wb') as file:
+            with open('models/model_bow.pkl', 'wb') as file:
                 pickle.dump(ffnn_bow, file)
         
         # N-gram vector
         # if model.pkl exists, load it
         try:
-            with open('model_ngram.pkl', 'rb') as file:
+            with open('models/model_ngram.pkl', 'rb') as file:
                 ffnn_ngram = pickle.load(file)
         except:
             ffnn_ngram = FFNN.FFNN(x_train.shape[1], 10, 1)
             ffnn_ngram.train(x_train, y_train, 0.1, 10)
             # Save model
-            with open('model_ngram.pkl', 'wb') as file:
+            with open('models/model_ngram.pkl', 'wb') as file:
                 pickle.dump(ffnn_ngram, file)
         
         # TF-IDF vector
         # if model.pkl exists, load it
         try:
-            with open('model_tfidf.pkl', 'rb') as file:
+            with open('models/model_tfidf.pkl', 'rb') as file:
                 ffnn_tfidf = pickle.load(file)
         except:
             ffnn_tfidf = FFNN.FFNN(x_train.shape[1], 10, 1)
             ffnn_tfidf.train(x_train, y_train, 0.1, 10)
             # Save model
-            with open('model_tfidf.pkl', 'wb') as file:
+            with open('models/model_tfidf.pkl', 'wb') as file:
                 pickle.dump(ffnn_tfidf, file)
         
         # Predict
