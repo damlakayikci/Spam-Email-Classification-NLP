@@ -8,11 +8,11 @@ file  = "Oppositional_thinking_analysis_dataset.json"
 
 if __name__ == "__main__":
 
-    # if len(sys.argv) < 2:
-    #     print("Please provide the model name as an argument.")
-    #     sys.exit(0)
+    if len(sys.argv) < 2:
+        print("Please provide the model name as an argument.")
+        sys.exit(0)
 
-    operation = True # sys.argv[1]
+    operation =  sys.argv[1]
 
     # Read data
     data = utils.read_data(file)
@@ -71,25 +71,54 @@ if __name__ == "__main__":
         print("Accuracy of TF-IDF     :", accuracy_TF_IDF)
         print("Accuracy of TF-IDF  SWL:", accuracy_TF_IDF_swl)
         sys.exit(0)
-    if operation :#== "ffnn":
+    if operation == "ffnn":
         # Split data into training and testing
         x_train, x_test, y_train, y_test = utils.split_data(BoW_vector, labels)
 
         # Train Feed Forward Neural Network
+        # BoW vector
         # if model.pkl exists, load it
         try:
-            with open('model.pkl', 'rb') as file:
-                ffnn = pickle.load(file)
+            with open('model_bow.pkl', 'rb') as file:
+                ffnn_bow = pickle.load(file)
         except:
-            ffnn = FFNN.FFNN(x_train.shape[1], 10, 1)
-            ffnn.train(x_train, y_train, 0.1, 10)
+            ffnn_bow = FFNN.FFNN(x_train.shape[1], 10, 1)
+            ffnn_bow.train(x_train, y_train, 0.1, 10)
             # Save model
-            with open('model.pkl', 'wb') as file:
-                pickle.dump(ffnn, file)
+            with open('model_bow.pkl', 'wb') as file:
+                pickle.dump(ffnn_bow, file)
+        
+        # N-gram vector
+        # if model.pkl exists, load it
+        try:
+            with open('model_ngram.pkl', 'rb') as file:
+                ffnn_ngram = pickle.load(file)
+        except:
+            ffnn_ngram = FFNN.FFNN(x_train.shape[1], 10, 1)
+            ffnn_ngram.train(x_train, y_train, 0.1, 10)
+            # Save model
+            with open('model_ngram.pkl', 'wb') as file:
+                pickle.dump(ffnn_ngram, file)
+        
+        # TF-IDF vector
+        # if model.pkl exists, load it
+        try:
+            with open('model_tfidf.pkl', 'rb') as file:
+                ffnn_tfidf = pickle.load(file)
+        except:
+            ffnn_tfidf = FFNN.FFNN(x_train.shape[1], 10, 1)
+            ffnn_tfidf.train(x_train, y_train, 0.1, 10)
+            # Save model
+            with open('model_tfidf.pkl', 'wb') as file:
+                pickle.dump(ffnn_tfidf, file)
         
         # Predict
-        err = ffnn.predict(x_test, y_test)
-        print(err)
+        err = ffnn_bow.predict(x_test, y_test)
+        print("Error of BoW:", err)
+        err = ffnn_ngram.predict(x_test, y_test)
+        print("Error of N-gram:", err)
+        err = ffnn_tfidf.predict(x_test, y_test)
+        print("Error of TF-IDF:", err)
 
 
     if operation == "stats":
