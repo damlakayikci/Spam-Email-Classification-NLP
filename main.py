@@ -2,7 +2,7 @@ import utils
 import FFNN
 import sys
 import pickle
-import pdb 
+import random 
 
 file  = "Oppositional_thinking_analysis_dataset.json"
 
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     if operation == "ffnn":
         # Split data into training and testing
         x_train, x_test, y_train, y_test = utils.split_data(BoW_vector, labels)
-
+        epochs = 30
         # Train Feed Forward Neural Network
         # BoW vector
         # if model.pkl exists, load it
@@ -83,7 +83,7 @@ if __name__ == "__main__":
                 ffnn_bow = pickle.load(file)
         except:
             ffnn_bow = FFNN.FFNN(x_train.shape[1], 10, 1)
-            ffnn_bow.train(x_train, y_train, 0.1, 10)
+            ffnn_bow.train(x_train, y_train, 0.1, epochs)
             # Save model
             with open('models/model_bow.pkl', 'wb') as file:
                 pickle.dump(ffnn_bow, file)
@@ -95,7 +95,7 @@ if __name__ == "__main__":
                 ffnn_ngram = pickle.load(file)
         except:
             ffnn_ngram = FFNN.FFNN(x_train.shape[1], 10, 1)
-            ffnn_ngram.train(x_train, y_train, 0.1, 10)
+            ffnn_ngram.train(x_train, y_train, 0.1, epochs)
             # Save model
             with open('models/model_ngram.pkl', 'wb') as file:
                 pickle.dump(ffnn_ngram, file)
@@ -107,7 +107,7 @@ if __name__ == "__main__":
                 ffnn_tfidf = pickle.load(file)
         except:
             ffnn_tfidf = FFNN.FFNN(x_train.shape[1], 10, 1)
-            ffnn_tfidf.train(x_train, y_train, 0.1, 10)
+            ffnn_tfidf.train(x_train, y_train, 0.1, epochs)
             # Save model
             with open('models/model_tfidf.pkl', 'wb') as file:
                 pickle.dump(ffnn_tfidf, file)
@@ -125,6 +125,38 @@ if __name__ == "__main__":
         # number of unique words
 
         pass
+
+    if operation == "pmi":
+        print("Computing PMI...")
+        # Preprocess text data
+        preprocessed_pmi = [utils.preprocess(text, True, False, True) for text in text_data]
+        # choose random words
+        words=[]
+        for i in range(10):
+            words.append(random.choice(preprocessed_pmi[random.randint(0, len(preprocessed_pmi) - 1)]))
+        print(words)
+        PMIs = []
+        # Compute PMI
+        for i in range(len(words)):
+            pmis = {}
+            for j in range(len(words)):
+                if i == j:
+                    continue
+                PMI = utils.PMI(words[i], words[j], preprocessed_pmi)
+                print(f"PMI of {words[i]} and {words[j]}\t: {PMI}")
+                pmis[words[j]] = PMI
+            PMIs.append(pmis)
+
+        def sort_dict_by_value(data):
+            sorted_keys_desc = [item[0] for item in sorted(data.items(), key=lambda item: item[1], reverse=True)]
+            return sorted_keys_desc
+        # Print most similar words for each word
+        for i in range(len(words)):
+            word_dict = PMIs[i]
+            print(f"Most similar words to \'{words[i].upper()}\'", *sort_dict_by_value(word_dict)[:3], sep=", ")
+        
+        
+        sys.exit(0)
 
 
     

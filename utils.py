@@ -1,6 +1,7 @@
 import re
 import json
 import nltk
+import numpy as np
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
@@ -59,3 +60,26 @@ def train_naive_bayes(texts_vectors, labels):
     accuracy = accuracy_score(label_test, predicted_labels)
     return model, accuracy
 
+def PMI(word1, word2, corpus, window_size=2):
+    # Initialize counts
+    word1_count = 0
+    word2_count = 0
+    word1_word2_count = 0
+    total_words = 0
+    for words in corpus:
+        total_words += len(words)
+        for i in range(len(words)):
+            if words[i] == word1:
+                word1_count += 1
+                for j in range(i-window_size, i+window_size+1):
+                    if j >= 0 and j < len(words) and words[j] == word2:
+                        word1_word2_count += 1
+            if words[i] == word2:
+                word2_count += 1
+    # Calculate probabilities
+    p_word1 = word1_count / total_words
+    p_word2 = word2_count / total_words
+    p_word1_word2 = word1_word2_count / total_words
+    # Calculate PMI
+    pmi = np.log2((p_word1_word2 / (p_word1 * p_word2)) + 0.00000001)
+    return pmi
