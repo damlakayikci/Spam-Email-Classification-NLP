@@ -22,7 +22,8 @@ This project focuses on classifying emails as spam or not spam using Natural Lan
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/damlakayikci/Spam-Email-Classification-NLP.git```
+   git clone https://github.com/damlakayikci/Spam-Email-Classification-NLP.git
+   cd src```
 
 ## Usage
 Use one of the following scripts to run the code
