@@ -10,7 +10,7 @@ file  = "Oppositional_thinking_analysis_dataset.json"
 if __name__ == "__main__":
 
     if len(sys.argv) < 2:
-        print("Please provide the model name as an argument.")
+        print("Please provide one of the arguments: nb, ffnn, stats, pmi ")
         sys.exit(0)
 
     operation =  sys.argv[1]
@@ -141,21 +141,68 @@ if __name__ == "__main__":
         lenghts_critical = [len(text) for text in preprocessed_critical]
         lenghts_conspiracy_swl = [len(text) for text in preprocessed_conspiracy_swl]
         lenghts_critical_swl = [len(text) for text in preprocessed_critical_swl]
+        mean_conspiracy = sum(lenghts_conspiracy) / len(lenghts_conspiracy)
+        mean_critical = sum(lenghts_critical) / len(lenghts_critical)
+        mean_conspiracy_swl = sum(lenghts_conspiracy_swl) / len(lenghts_conspiracy_swl)
+        mean_critical_swl = sum(lenghts_critical_swl) / len(lenghts_critical_swl)
 
         # average number of words in conspiracy and critical
         print("Category: Conspiracy, number of emails: ", len(conspiracy))
         print("average number of: ")
-        print("\twords:\t\t ", sum(lenghts_conspiracy) / len(lenghts_conspiracy))
-        print("\tunique words:\t ", sum(lenghts_conspiracy_swl) / len(lenghts_conspiracy_swl))
-        print("\tredundant words: ", sum(lenghts_conspiracy) / len(lenghts_conspiracy) - sum(lenghts_conspiracy_swl) / len(lenghts_conspiracy_swl))
+        print("\twords:\t\t ", mean_conspiracy)
+        print("\tunique words:\t ", mean_conspiracy_swl)
+        print("\tredundant words: ", mean_conspiracy - mean_conspiracy_swl)
+        print("max number of words in a text:\t ", max(lenghts_conspiracy))
+        print("min number of words in a text:\t ", min(lenghts_conspiracy))
+        print("standard deviation: ", utils.std(lenghts_conspiracy))
+        print("max number of unique words in a text:\t ", max(lenghts_conspiracy_swl))
+        print("min number of unique words in a text:\t ", min(lenghts_conspiracy_swl))
+
         print("\nCategory: Critical, number of emails: ", len(critical))
         print("average number of: ")
-        print("\twords:\t\t ", sum(lenghts_critical) / len(lenghts_critical))
-        print("\tunique words:\t ", sum(lenghts_critical_swl) / len(lenghts_critical_swl))
-        print("\tredundant words: ", sum(lenghts_critical) / len(lenghts_critical) - sum(lenghts_critical_swl) / len(lenghts_critical_swl))
+        print("\twords:\t\t ", mean_critical)
+        print("\tunique words:\t ", mean_critical_swl)
+        print("\tredundant words: ", mean_critical - mean_critical_swl)
+        print("max number of words in a text:\t ", max(lenghts_critical))
+        print("min number of words in a text:\t ", min(lenghts_critical))
+        print("standard deviation: ", utils.std(lenghts_critical))
+        print("max number of unique words in a text:\t ", max(lenghts_critical_swl))
+        print("min number of unique words in a text:\t ", min(lenghts_critical_swl))
+
+        lenghts_conspiracy = sorted(lenghts_conspiracy)
+        lenghts_critical = sorted(lenghts_critical)
+        lenghts_conspiracy_swl = sorted(lenghts_conspiracy_swl)
+        lenghts_critical_swl = sorted(lenghts_critical_swl)
+        
+        # plot pdf of lenghts of conspiracy and critical
+        plt.figure(figsize=(10, 8))
+
+        plt.subplot(2, 2, 1)
+        plt.plot(lenghts_conspiracy, utils.pdf(lenghts_conspiracy), label='Conspiracy')
+        plt.scatter(lenghts_conspiracy, utils.pdf(lenghts_conspiracy), color='blue')
+        plt.ylabel('Probability')
+        plt.xlabel('Conspiracy: # words, whole sentence')
+
+        plt.subplot(2, 2, 2)
+        plt.plot(lenghts_critical, utils.pdf(lenghts_critical), label='Critical')
+        plt.scatter(lenghts_critical, utils.pdf(lenghts_critical), color='red')
+        plt.ylabel('Probability')
+        plt.xlabel('Critical: # words, whole sentence')
+
+        plt.subplot(2, 2, 3)
+        plt.plot(lenghts_conspiracy_swl, utils.pdf(lenghts_conspiracy_swl), label='Conspiracy SWL')
+        plt.scatter(lenghts_conspiracy_swl, utils.pdf(lenghts_conspiracy_swl), color='green')
+        plt.ylabel('Probability')
+        plt.xlabel('Conspiracy: # unique words, without stop words')
+
+        plt.subplot(2, 2, 4)
+        plt.plot(lenghts_critical_swl, utils.pdf(lenghts_critical_swl), label='Critical SWL')
+        plt.scatter(lenghts_critical_swl, utils.pdf(lenghts_critical_swl), color='orange')
+        plt.ylabel('Probability')
+        plt.xlabel('Critical: # unique words, without stop words')
 
 
-       
+        plt.show()
         
         
 

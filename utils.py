@@ -83,3 +83,13 @@ def PMI(word1, word2, corpus, window_size=2):
     # Calculate PMI
     pmi = np.log2((p_word1_word2 / (p_word1 * p_word2)) + 0.00000001)
     return pmi
+
+def pdf(x): 
+	mean = np.mean(x) 
+	std = np.std(x) 
+	y_out = 1/(std * np.sqrt(2 * np.pi)) * np.exp( - (x - mean)**2 / (2 * std**2)) 
+	return y_out
+
+def std(x):
+    std = np.std(x)
+    return std
