@@ -3,6 +3,7 @@ import FFNN
 import sys
 import pickle
 import random 
+import matplotlib.pyplot as plt
 
 file  = "Oppositional_thinking_analysis_dataset.json"
 
@@ -122,9 +123,43 @@ if __name__ == "__main__":
 
 
     if operation == "stats":
-        # number of unique words
 
-        pass
+        # divide data into 2 categories, conspiracy and critical
+        conspiracy = [data[i]['text'] for i in range(len(data)) if data[i]['category'] == 'CONSPIRACY']
+        critical = [data[i]['text'] for i in range(len(data)) if data[i]['category'] == 'CRITICAL']
+
+        # Tokenize text data without removing stop words and lemmatizing
+        preprocessed_conspiracy = [utils.preprocess(text, True, False, False) for text in conspiracy]
+        preprocessed_critical = [utils.preprocess(text, True, False, False) for text in critical]
+
+        # Tokenize text data, removing stop words    
+        preprocessed_conspiracy_swl = [utils.preprocess(text, True, True, True) for text in conspiracy]
+        preprocessed_critical_swl = [utils.preprocess(text, True, True, True) for text in critical]
+
+        # lenghts of conspiracy and critical
+        lenghts_conspiracy = [len(text) for text in preprocessed_conspiracy]
+        lenghts_critical = [len(text) for text in preprocessed_critical]
+        lenghts_conspiracy_swl = [len(text) for text in preprocessed_conspiracy_swl]
+        lenghts_critical_swl = [len(text) for text in preprocessed_critical_swl]
+
+        # average number of words in conspiracy and critical
+        print("Category: Conspiracy, number of emails: ", len(conspiracy))
+        print("average number of: ")
+        print("\twords:\t\t ", sum(lenghts_conspiracy) / len(lenghts_conspiracy))
+        print("\tunique words:\t ", sum(lenghts_conspiracy_swl) / len(lenghts_conspiracy_swl))
+        print("\tredundant words: ", sum(lenghts_conspiracy) / len(lenghts_conspiracy) - sum(lenghts_conspiracy_swl) / len(lenghts_conspiracy_swl))
+        print("\nCategory: Critical, number of emails: ", len(critical))
+        print("average number of: ")
+        print("\twords:\t\t ", sum(lenghts_critical) / len(lenghts_critical))
+        print("\tunique words:\t ", sum(lenghts_critical_swl) / len(lenghts_critical_swl))
+        print("\tredundant words: ", sum(lenghts_critical) / len(lenghts_critical) - sum(lenghts_critical_swl) / len(lenghts_critical_swl))
+
+
+       
+        
+        
+
+        
 
     if operation == "pmi":
         print("Computing PMI...")
