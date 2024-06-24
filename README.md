@@ -7,11 +7,16 @@ This project focuses on classifying emails as spam or not spam using Natural Lan
 ## Contents
 
 - `models/`: Directory containing trained models.
-- `FFNN.py`: Script for training a Feedforward Neural Network.
-- `NLP - Project 1_4.pdf`: Project documentation and analysis.
-- `Oppositional_thinking_analysis_dataset.json`: Dataset used for training and evaluation.
-- `main.py`: Main script for running the classification.
-- `utils.py`: Utility functions for data processing and model evaluation.
+- `src/` : Directory containing source files
+   - `FFNN.py`: Script for training a Feedforward Neural Network.
+   - `main.py`: Main script for running the classification.
+   - `utils.py`: Utility functions for data processing and model evaluation.
+- `data/`: Directory containing the data set
+   - `Oppositional_thinking_analysis_dataset.json`: Dataset used for training and evaluation.
+- `desc/`: Directory containing the description of the project
+   - `NLP - Project 1_4.pdf`: Project documentation and analysis.
+
+
 
 ## Requirements
 
